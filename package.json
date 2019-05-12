@@ -3,7 +3,9 @@
   "version": "0.0.0",
   "private": true,
   "scripts": {
-    "start": "node ./bin/www"
+    "start": "node ./bin/www",
+    "test": "npx jest --passWithNoTests --forceExit --runInBand --watch",
+    "coverage": "npx jest --passWithNoTests --forceExit --runInBand --coverage"
   },
   "dependencies": {
     "cookie-parser": "~1.4.3",
@@ -13,11 +15,11 @@
     "fetch": "^1.1.0",
     "morgan": "~1.9.0",
     "pg": "^7.10.0",
-    "pryjs": "^1.0.3",
     "sequelize": "^5.8.5",
     "sequelize-cli": "^5.4.0"
   },
   "devDependencies": {
+    "pryjs": "^1.0.3",
     "babel-jest": "^24.8.0",
     "scriptjs": "^2.5.9",
     "supertest": "^4.0.2"
