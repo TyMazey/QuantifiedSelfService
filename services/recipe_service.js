@@ -1,5 +1,6 @@
 var fetch = require('node-fetch');
-const baseUrl = 'https://api.edamam.com/'
+const baseUrl = 'https://api.edamam.com'
+require('dotenv').config();
 
 module.exports = class RecipeService {
   static requestRecipesForFood(food) {
