@@ -1,4 +1,5 @@
 var Recipe = require('../models').Recipe;
+var Query = require('../models').Query;
 var RecipeService = require('../services/recipe_service');
 var RecipeSerializer = require('../serializers/recipe_serializer');
 
@@ -32,11 +33,15 @@ function requireFood(food) {
 function findOrRequestRecipes(food) {
   return new Promise((resolve, reject) => {
     Query.findOne({
-      where: {name: food},
+      where: {term: food},
       include: "recipes"
     })
     .then(query => {
-      query ? query.recipes : requestRecipes(food)
+      if (query) {
+        return query.recipes
+      } else {
+        return requestRecipes(food)
+      }
     })
     .then(recipes => {
       resolve(recipes);

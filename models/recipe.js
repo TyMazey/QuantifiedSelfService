@@ -1,3 +1,5 @@
+var pry = require('pryjs');
+
 'use strict';
 module.exports = (sequelize, DataTypes) => {
   const Recipe = sequelize.define('Recipe', {
@@ -22,23 +24,68 @@ module.exports = (sequelize, DataTypes) => {
       return findOrCreateRecipe(recipe, Recipe)
     }))
   }
+
   return Recipe;
 };
 
-function findOrCreateRecipe(recipe, model) {
+function findOrCreateRecipe(request, model) {
   // Moved function outside as promise.all wasn't resolving correctly.
   return new Promise((resolve, reject) => {
-    model.findOrCreate({
-      where: {
-        name: recipe.recipe.label,
-        imageUrl: recipe.recipe.image,
-        recipeUrl: recipe.recipe.url,
-        calories: parseInt(recipe.recipe.calories)
-      }
-    })
-    .then(([recipe, created]) => {
-      resolve(recipe)
+    createRecipeIngredients(request, model)
+    .then(function(recipes) {
+      resolve(recipes)
     })
     .catch(error => reject(error))
   })
+}
+
+function createRecipeIngredients(request, Recipe) {
+  var Ingredient = require('../models').Ingredient;
+  return new Promise((resolve, reject) => {
+    Promise.all([
+      Recipe.findOrCreate({
+        where: {
+          name: request.recipe.label,
+          imageUrl: request.recipe.image,
+          recipeUrl: request.recipe.url,
+          calories: parseInt(request.recipe.calories)
+        }
+      }),
+      Promise.all([
+        request.recipe.ingredients.map(function(ingredient) {
+          return Ingredient.findOrCreate({
+            where: {
+              name: ingredient.text
+            }
+          })
+        })
+      ])
+    ])
+    .then(([recipe, ingredients]) => {
+      Promise.all(ingredients[0])
+      .then((ingredients) => {
+        return createRecipeIngredientAssociations(recipe[0], ingredients[0], request)
+      })
+      .then(() => {
+        resolve(recipe[0])
+      })
+    })
+    .catch(error => {
+    })
+  })
+}
+
+function createRecipeIngredientAssociations(recipe, ingredients, request) {
+  var RecipeIngredient = require('../models').RecipeIngredient;
+  var recipeIngredientArray = [];
+  for(var i = 0; i < ingredients.length; i++) {
+    recipeIngredientArray.push(RecipeIngredient.findOrCreate({
+      where: {
+        RecipeId: recipe.id,
+        IngredientId: ingredients[i].id,
+        quantity: parseInt(request.recipe.ingredients[i].weight)
+      }
+    }))
+  return Promise.all(recipeIngredientArray);
+  }
 }
