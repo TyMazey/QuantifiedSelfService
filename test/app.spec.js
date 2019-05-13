@@ -20,6 +20,8 @@ describe('Recipe API', () => {
           expect(response.body[0]).toHaveProperty('calories')
           expect(response.body[0]).toHaveProperty('imageUrl')
           expect(response.body[0]).toHaveProperty('recipeUrl')
+          expect(response.body[0]).toHaveProperty('ingredients')
+          expect(Array.isArray(response.body[0].ingredients)).toBe(true)
         })
     })
 

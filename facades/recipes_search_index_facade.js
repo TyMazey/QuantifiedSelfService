@@ -30,7 +30,6 @@ function requireFood(food) {
 }
 
 function findOrRequestRecipes(food) {
-  // Just requests pending discussion with team regarding intent for storage
   return new Promise((resolve, reject) => {
     RecipeService.requestRecipesForFood(food)
     .then(recipes => {
