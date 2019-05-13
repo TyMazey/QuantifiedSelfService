@@ -31,15 +31,30 @@ function requireFood(food) {
 
 function findOrRequestRecipes(food) {
   return new Promise((resolve, reject) => {
-    RecipeService.requestRecipesForFood(food)
-    .then(recipes => {
-      return Recipe.fromRequest(recipes);
+    Query.findOne({
+      where: {name: food},
+      include: "recipes"
+    })
+    .then(query => {
+      query ? query.recipes : requestRecipes(food)
     })
     .then(recipes => {
       resolve(recipes);
     })
     .catch(error => {
       reject(error);
+    })
+  })
+}
+
+function  requestRecipes(food) {
+  return new Promise(function(resolve, reject) {
+    RecipeService.requestRecipesForFood(food)
+    .then(recipes => {
+      resolve(Recipe.fromRequest(recipes))
+    })
+    .catch(error => {
+      reject(error)
     })
   })
 }
