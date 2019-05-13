@@ -11,6 +11,10 @@ module.exports = (sequelize, DataTypes) => {
       through: models.QueryRecipe,
       as: 'queries'
     })
+    Recipe.belongsToMany(models.Ingredient, {
+      through: models.RecipeIngredient,
+      as: 'ingredients'
+    })
   };
 
   Recipe.fromRequest = function(request) {
