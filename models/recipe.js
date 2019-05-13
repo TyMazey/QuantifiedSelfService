@@ -9,5 +9,29 @@ module.exports = (sequelize, DataTypes) => {
   Recipe.associate = function(models) {
     // associations can be defined here
   };
+
+  Recipe.fromRequest = function(request) {
+    return Promise.all(request.map(function(recipe) {
+      return findOrCreateRecipe(recipe, Recipe)
+    }))
+  }
   return Recipe;
 };
+
+function findOrCreateRecipe(recipe, model) {
+  // Moved function outside as promise.all wasn't resolving correctly.
+  return new Promise((resolve, reject) => {
+    model.findOrCreate({
+      where: {
+        name: recipe.recipe.label,
+        imageUrl: recipe.recipe.image,
+        recipeUrl: recipe.recipe.url,
+        calories: parseInt(recipe.recipe.calories)
+      }
+    })
+    .then(([recipe, created]) => {
+      resolve(recipe)
+    })
+    .catch(error => reject(error))
+  })
+}
