@@ -13,10 +13,12 @@ module.exports = (sequelize, DataTypes) => {
   Recipe.fromRequest = function(request) {
     return Promise.all(request.map(function(recipe) {
       Recipe.findOrCreate({
-        name: recipe.recipe.label,
-        imageUrl: recipe.recipe.image,
-        recipeUrl: recipe.recipe.url,
-        calories: recipe.recipe.calories
+        where: {
+          name: recipe.recipe.label,
+          imageUrl: recipe.recipe.image,
+          recipeUrl: recipe.recipe.url,
+          calories: recipe.recipe.calories
+        }
       })
     }))
   }

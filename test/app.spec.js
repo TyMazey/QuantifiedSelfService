@@ -3,6 +3,12 @@ var request = require('supertest');
 var shell = require('shelljs');
 
 describe('Recipe API', () => {
+  beforeAll(() => {
+    shell.exec('npx sequelize db:drop')
+    shell.exec('npx sequelize db:create')
+    shell.exec('npx sequelize db:migrate')
+  })
+  
   describe('Request recipe for a food', () => {
     test('Returns a list of recipes for a food', () => {
       return request(app).get('/api/v1/recipes?food=chicken')

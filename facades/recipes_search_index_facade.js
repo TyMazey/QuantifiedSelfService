@@ -1,6 +1,7 @@
-var Recipe = require('../models'.Recipe);
+var Recipe = require('../models').Recipe;
 var RecipeService = require('../services/recipe_service');
 var RecipeSerializer = require('../serializers/recipe_serializer');
+// var pry = require('pryjs');
 
 module.exports = class RecipesSearchIndexFacade {
   constructor(status, body) {
@@ -24,6 +25,7 @@ module.exports = class RecipesSearchIndexFacade {
 }
 
 function findOrRequestRecipes(food) {
+  // eval(pry.it);
   // Just requests pending discussion with team regarding intent for storage
   return new Promise((resolve, reject) => {
     RecipeService.requestRecipesForFood(food)

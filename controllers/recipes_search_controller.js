@@ -1,4 +1,4 @@
-var RecipesSearchIndexFacade = require('../facades/recipe_search_index_facade');
+var RecipesSearchIndexFacade = require('../facades/recipes_search_index_facade');
 
 module.exports = class RecipesSearchController {
   static index(request, response) {
