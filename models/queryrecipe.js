@@ -1,11 +1,12 @@
 'use strict';
 module.exports = (sequelize, DataTypes) => {
   const QueryRecipe = sequelize.define('QueryRecipe', {
-    queryId: DataTypes.INTEGER,
-    recipeId: DataTypes.INTEGER
+    QueryId: DataTypes.INTEGER,
+    RecipeId: DataTypes.INTEGER
   }, {});
   QueryRecipe.associate = function(models) {
-    // associations can be defined here
+    QueryRecipe.belongsTo(models.Query);
+    QueryRecipe.belongsTo(models.Recipe);
   };
   return QueryRecipe;
 };
