@@ -1,7 +1,6 @@
 var Recipe = require('../models').Recipe;
 var RecipeService = require('../services/recipe_service');
 var RecipeSerializer = require('../serializers/recipe_serializer');
-// var pry = require('pryjs');
 
 module.exports = class RecipesSearchIndexFacade {
   constructor(status, body) {
@@ -11,9 +10,7 @@ module.exports = class RecipesSearchIndexFacade {
 
   static requestRecipes(food) {
     return new Promise((resolve, reject) => {
-      food ?
-      findOrRequestRecipes(food) :
-      reject(new RecipesSearchIndexFacade(400, {error: "Food query parameter is required."}))
+      requireFood(food)
       .then(recipes => {
         resolve(new RecipesSearchIndexFacade(200, RecipeSerializer.formatAll(recipes)))
       })
@@ -24,19 +21,26 @@ module.exports = class RecipesSearchIndexFacade {
   }
 }
 
+function requireFood(food) {
+  return new Promise((resolve, reject) => {
+    food ?
+    resolve(findOrRequestRecipes(food)) :
+    reject(new RecipesSearchIndexFacade(400, {error: "Food query parameter is required."}))
+  })
+}
+
 function findOrRequestRecipes(food) {
-  // eval(pry.it);
   // Just requests pending discussion with team regarding intent for storage
   return new Promise((resolve, reject) => {
     RecipeService.requestRecipesForFood(food)
     .then(recipes => {
-      return Recipe.fromRequest(recipes)
+      return Recipe.fromRequest(recipes);
     })
     .then(recipes => {
-      resolve(recipes)
+      resolve(recipes);
     })
     .catch(error => {
-      reject(error)
+      reject(error);
     })
   })
 }

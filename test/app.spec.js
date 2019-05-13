@@ -8,18 +8,18 @@ describe('Recipe API', () => {
     shell.exec('npx sequelize db:create')
     shell.exec('npx sequelize db:migrate')
   })
-  
+
   describe('Request recipe for a food', () => {
     test('Returns a list of recipes for a food', () => {
       return request(app).get('/api/v1/recipes?food=chicken')
         .then(response => {
           expect(response.status).toBe(200)
-          expect(Array.isArray(response.data)).toBe(true)
-          expect(response.data[0]).toHaveProperty('id')
-          expect(response.data[0]).toHaveProperty('name')
-          expect(response.data[0]).toHaveProperty('calories')
-          expect(response.data[0]).toHaveProperty('imageUrl')
-          expect(response.data[0]).toHaveProperty('recipeUrl')
+          expect(Array.isArray(response.body)).toBe(true)
+          expect(response.body[0]).toHaveProperty('id')
+          expect(response.body[0]).toHaveProperty('name')
+          expect(response.body[0]).toHaveProperty('calories')
+          expect(response.body[0]).toHaveProperty('imageUrl')
+          expect(response.body[0]).toHaveProperty('recipeUrl')
         })
     })
 
@@ -27,7 +27,7 @@ describe('Recipe API', () => {
       request(app).get('/api/v1/recipes')
         .then(response => {
           expect(response.status).toBe(400)
-          expect(response.data.error).toBe("Food query parameter is required.")
+          expect(response.body.error).toBe("Food query parameter is required.")
         })
     })
   })

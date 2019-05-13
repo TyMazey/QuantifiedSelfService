@@ -1,6 +1,7 @@
 module.exports = class RecipeSerializer {
   static formatOne(recipe) {
     return {
+      id: recipe.id,
       name: recipe.name,
       calories: recipe.calories,
       imageUrl: recipe.imageUrl,
@@ -9,7 +10,7 @@ module.exports = class RecipeSerializer {
   }
 
   static formatAll(recipes) {
-    recipes.map(function(recipe) {
+    return recipes.map(function(recipe) {
       return RecipeSerializer.formatOne(recipe);
     })
   }
