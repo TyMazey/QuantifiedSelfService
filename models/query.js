@@ -4,7 +4,10 @@ module.exports = (sequelize, DataTypes) => {
     term: DataTypes.STRING
   }, {});
   Query.associate = function(models) {
-    // associations can be defined here
+    Query.belongsToMany(models.Recipe, {
+      through: models.QueryRecipe,
+      as: 'recipes'
+    })
   };
   return Query;
 };
