@@ -7,7 +7,10 @@ module.exports = (sequelize, DataTypes) => {
     calories: DataTypes.INTEGER
   }, {});
   Recipe.associate = function(models) {
-    // associations can be defined here
+    Recipe.belongsToMany(models.Query, {
+      through: models.QueryRecipe,
+      as: 'queries'
+    })
   };
 
   Recipe.fromRequest = function(request) {
