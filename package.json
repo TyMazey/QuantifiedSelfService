@@ -12,6 +12,7 @@
     "express": "~4.16.0",
     "fetch": "^1.1.0",
     "morgan": "~1.9.0",
+    "node-fetch": "^2.5.0",
     "pg": "^7.10.0",
     "pryjs": "^1.0.3",
     "sequelize": "^5.8.5",
@@ -20,7 +21,7 @@
   "devDependencies": {
     "babel-jest": "^24.8.0",
     "jest": "^24.8.0",
-    "scriptjs": "^2.5.9",
+    "shelljs": "^0.8.3",
     "supertest": "^4.0.2"
   }
 }
