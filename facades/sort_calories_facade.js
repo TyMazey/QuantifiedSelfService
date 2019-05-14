@@ -1,7 +1,6 @@
 var Recipe = require('../models').Recipe;
 var RecipeHelper = require('../helpers/recipe_helper');
 var RecipeSerializer = require('../serializers/recipe_serializer');
-var pry = require('pryjs')
 
 module.exports = class SortCaloriesFacade {
   static sortRecipes(search) {
