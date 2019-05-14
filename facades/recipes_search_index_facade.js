@@ -1,8 +1,5 @@
-var Recipe = require('../models').Recipe;
-var Query = require('../models').Query;
-var QueryRecipe = require('../models').QueryRecipe;
-var RecipeService = require('../services/recipe_service');
 var RecipeSerializer = require('../serializers/recipe_serializer');
+var RecipeHelper = require('../helpers/recipe_helper');
 
 module.exports = class RecipesSearchIndexFacade {
   constructor(status, body) {
@@ -13,6 +10,7 @@ module.exports = class RecipesSearchIndexFacade {
   static requestRecipes(food) {
     return new Promise((resolve, reject) => {
       requireFood(food)
+      .then(() => RecipeHelper.findOrRequestRecipes(food))
       .then(recipes => {
         resolve(new RecipesSearchIndexFacade(200, RecipeSerializer.formatAll(recipes)))
       })
@@ -26,57 +24,7 @@ module.exports = class RecipesSearchIndexFacade {
 function requireFood(food) {
   return new Promise((resolve, reject) => {
     food ?
-    resolve(findOrRequestRecipes(food)) :
+    resolve(food) :
     reject(new RecipesSearchIndexFacade(400, {error: "Food query parameter is required."}))
   })
-}
-
-function findOrRequestRecipes(food) {
-  return new Promise((resolve, reject) => {
-    Query.findOne({
-      where: {term: food},
-      include: "recipes"
-    })
-    .then(query => {
-      if (query) {
-        return query.recipes
-      } else {
-        return requestRecipes(food)
-      }
-    })
-    .then(recipes => {
-      createQueryRecipeAssociations(food, recipes)
-      resolve(recipes);
-    })
-    .catch(error => {
-      reject(error);
-    })
-  })
-}
-
-function  requestRecipes(food) {
-  return new Promise(function(resolve, reject) {
-    RecipeService.requestRecipesForFood(food)
-    .then(recipes => {
-      resolve(Recipe.fromRequest(recipes))
-    })
-    .catch(error => {
-      reject(error)
-    })
-  })
-}
-
-function createQueryRecipeAssociations(food, recipes) {
-  Query.create({
-    term: food
-  })
-  .then(query => {
-    Promise.all(recipes.map(function(recipe) {
-      return QueryRecipe.create({
-        QueryId: query.id,
-        RecipeId: recipe.id
-      })
-    }))
-  })
-  .catch(error => {})
 }
