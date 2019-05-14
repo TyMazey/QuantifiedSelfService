@@ -9,14 +9,14 @@ module.exports = class SortIngredientsFacade {
 
   static sortRecipes(search) {
     return new Promise((resolve, reject) => {
-      checkSearch(search)
+      lookupIngredients(search)
       .then(response => resolve(new SortIngredientsFacade(200, response)))
       .catch(error => reject(new SortIngredientsFacade(500, error)))
     })
   }
 }
 
-function checkSearch(search) {
+function lookupIngredients(search) {
   return new Promise(function(resolve, reject) {
     search ?
     resolve(Recipe.sortAllByIngredients()) :
