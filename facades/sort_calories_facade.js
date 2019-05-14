@@ -3,7 +3,7 @@ var RecipeHelper = require('../helpers/recipe_helper');
 var RecipeSerializer = require('../serializers/recipe_serializer');
 var pry = require('pryjs')
 
-module.exports = class SortFacade {
+module.exports = class SortCaloriesFacade {
   static sortRecipes(search) {
     return new Promise(function(resolve, reject) {
       checkSearch(search)

@@ -1,4 +1,4 @@
-var SortFacade = require('../facades/sort_facade');
+var SortCaloriesFacade = require('../facades/sort_calories_facade');
 
 module.exports = class SortCaloriesController {
   static index(request, response) {
