@@ -1,4 +1,6 @@
 var Recipe = require('../models').Recipe;
+var Query = require('../models').Query;
+var QueryRecipe = require('../models').QueryRecipe;
 var RecipeService = require('../services/recipe_service');
 var RecipeSerializer = require('../serializers/recipe_serializer');
 
@@ -30,17 +32,51 @@ function requireFood(food) {
 }
 
 function findOrRequestRecipes(food) {
-  // Just requests pending discussion with team regarding intent for storage
   return new Promise((resolve, reject) => {
-    RecipeService.requestRecipesForFood(food)
-    .then(recipes => {
-      return Recipe.fromRequest(recipes);
+    Query.findOne({
+      where: {term: food},
+      include: "recipes"
+    })
+    .then(query => {
+      if (query) {
+        return query.recipes
+      } else {
+        return requestRecipes(food)
+      }
     })
     .then(recipes => {
+      createQueryRecipeAssociations(food, recipes)
       resolve(recipes);
     })
     .catch(error => {
       reject(error);
     })
   })
+}
+
+function  requestRecipes(food) {
+  return new Promise(function(resolve, reject) {
+    RecipeService.requestRecipesForFood(food)
+    .then(recipes => {
+      resolve(Recipe.fromRequest(recipes))
+    })
+    .catch(error => {
+      reject(error)
+    })
+  })
+}
+
+function createQueryRecipeAssociations(food, recipes) {
+  Query.create({
+    term: food
+  })
+  .then(query => {
+    Promise.all(recipes.map(function(recipe) {
+      return QueryRecipe.create({
+        QueryId: query.id,
+        RecipeId: recipe.id
+      })
+    }))
+  })
+  .catch(error => {})
 }
