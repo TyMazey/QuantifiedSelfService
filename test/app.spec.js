@@ -55,5 +55,27 @@ describe('Recipe API', () => {
         expect(response.body[1].name).toBe('Twistin’ Chicken')
       })
     })
+  describe('Sort recipes for a food', () => {
+    test('returns a list recipes sorted by the calories from highest to lowest', () => {
+      return request(app).get('/api/v1/sort/calories?food=chicken')
+      .then(response => {
+        expect(response.status).toBe(200)
+        expect(response.body[0]).toHaveProperty('totalTime')
+        expect(response.body[0].calories).toBe()
+        expect(response.body[1].calories).toBe()
+        expect(response.body[2].calories).toBe()
+      })
+    })
+    test('returns a list of all recipies in DB sorted by calories', () => {
+      return request(app).get('/api/v1/sort/calories')
+      .then(response => {
+        expect(response.status).toBe(200)
+        expect(response.body[0]).toHaveProperty('totalTime')
+        expect(response.body[0].calories).toBe()
+        expect(response.body[0].name).toBe()
+        expect(response.body[1].calories).toBe()
+        expect(response.body[1].name).toBe()
+      })
+    })
   })
 })
