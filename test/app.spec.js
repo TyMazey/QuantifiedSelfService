@@ -39,9 +39,20 @@ describe('Recipe API', () => {
       .then(response => {
         expect(response.status).toBe(200)
         expect(response.body[0]).toHaveProperty('calories')
-        expect(response.body[0].calories).toBe()
-        expect(response.body[1].calories).toBe()
-        expect(response.body[2].calories).toBe()
+        expect(response.body[0].calories).toBe(708)
+        expect(response.body[1].calories).toBe(1092)
+        expect(response.body[2].calories).toBe(1651)
+      })
+    })
+    test('returns a list of all recipies in DB sorted by calories', () => {
+      request(app).get('/api/v1/sort/calories')
+      .then(response => {
+        expect(response.status).toBe(200)
+        expect(response.body[0]).toHaveProperty('calories')
+        expect(response.body[0].calories).toBe(322)
+        expect(response.body[0].name).toBe('Skirt Steak and Hanger Steak')
+        expect(response.body[1].calories).toBe(708)
+        expect(response.body[1].name).toBe('Twistin’ Chicken')
       })
     })
   })
