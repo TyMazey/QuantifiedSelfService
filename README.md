@@ -71,7 +71,7 @@ body:
 
 You can request a list of recipes to be sorted by the count of ingredients from lowest to highest by making a `GET` request to `/api/v1/sort/ingredients`. You can filter recipes further by adding an optional query parameter for food type for example `/api/v1/sort/ingredients?food=chicken`
 
-A successful request will result in a 200 status code, and a list of recipes. This will include attributes for the recipes including a list of ingredients for the recipe. If no food parameter is given it will return all recipes currently in the database. If a parameter is given it will only return recipes for that food type.
+A successful request will result in a 200 status code, and a list of recipes. This will include attributes for the recipes including a list of ingredients for the recipe. If no food parameter is given it will use all recipes currently in the database for the request. If a parameter is given it will also perform a lookup for new recipes for that food type should they not be present in the database already.
 
 An example response will look like:
 ```HTTP
