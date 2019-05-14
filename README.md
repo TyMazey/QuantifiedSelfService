@@ -66,3 +66,44 @@ body:
   ]  
 }
 ```
+
+##### Requesting recipes sorted by ingredients
+
+You can request a list of recipes to be sorted by the count of ingredients from lowest to highest by making a `GET` request to `/api/v1/sort/ingredients`. You can filter recipes further by adding an optional query parameter for food type for example `/api/v1/sort/ingredients?food=chicken`
+
+A successful request will result in a 200 status code, and a list of recipes. This will include attributes for the recipes including a list of ingredients for the recipe. If no food parameter is given it will return all recipes currently in the database. If a parameter is given it will only return recipes for that food type.
+
+An example response will look like:
+```HTTP
+status: 200
+body:
+
+[
+    {
+        "id": 8,
+        "name": "Twistin’ Chicken",
+        "calories": 708,
+        "imageUrl": "https://www.edamam.com/web-img/245/245252a20f66378b825b918781a422b4.jpg",
+        "recipeUrl": "http://www.cookstr.com/recipes/twistinrsquo-chicken",
+        "ingredients": [
+            {
+                "name": "2 egg whites",
+                "quantity": 52
+            },
+            {
+                "name": "2 boneless, skinless chicken breasts , or 1 pound chicken tenders",
+                "quantity": 544
+            },
+            {
+                "name": "juice from ½ lemon",
+                "quantity": 29
+            },
+            {
+                "name": "2 teaspoons cornstarch",
+                "quantity": 5
+            }
+        ]
+    },
+    {...}
+]
+```
