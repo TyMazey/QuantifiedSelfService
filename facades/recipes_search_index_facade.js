@@ -1,5 +1,6 @@
 var Recipe = require('../models').Recipe;
 var Query = require('../models').Query;
+var QueryRecipe = require('../models').QueryRecipe;
 var RecipeService = require('../services/recipe_service');
 var RecipeSerializer = require('../serializers/recipe_serializer');
 
@@ -44,6 +45,7 @@ function findOrRequestRecipes(food) {
       }
     })
     .then(recipes => {
+      createQueryRecipeAssociations(food, recipes)
       resolve(recipes);
     })
     .catch(error => {
@@ -62,4 +64,19 @@ function  requestRecipes(food) {
       reject(error)
     })
   })
+}
+
+function createQueryRecipeAssociations(food, recipes) {
+  Query.create({
+    term: food
+  })
+  .then(query => {
+    Promise.all(recipes.map(function(recipe) {
+      return QueryRecipe.create({
+        QueryId: query.id,
+        RecipeId: recipe.id
+      })
+    }))
+  })
+  .catch(error => {})
 }
