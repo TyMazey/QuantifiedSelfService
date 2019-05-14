@@ -15,7 +15,6 @@ module.exports = class RecipesSearchIndexFacade {
         resolve(new RecipesSearchIndexFacade(200, RecipeSerializer.formatAll(recipes)))
       })
       .catch(recipes => {
-        console.log(recipes);
         reject(new RecipesSearchIndexFacade(400, {error: "Food query parameter is required."}))
       })
     })
