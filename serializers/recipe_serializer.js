@@ -1,3 +1,5 @@
+var IngredientSerializer = require('./ingredient_serializer');
+
 module.exports = class RecipeSerializer {
   static formatOne(recipe) {
     return {
