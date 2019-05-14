@@ -9,5 +9,19 @@ module.exports = (sequelize, DataTypes) => {
     RecipeIngredient.belongsTo(models.Recipe);
     RecipeIngredient.belongsTo(models.Ingredient);
   };
+
+  RecipeIngredient.createAssociation = function(recipe, ingredient, weight) {
+    return new Promise((resolve, reject) => {
+      RecipeIngredient.findOrCreate({
+        where: {
+          RecipeId: recipe.id,
+          IngredientId: ingredient.id,
+          quantity: parseInt(weight)
+        }
+      })
+      .then(recipeIngredient => resolve(recipeIngredient))
+      .catch(error => reject(error))
+    })
+  }
   return RecipeIngredient;
 };

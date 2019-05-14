@@ -1,4 +1,3 @@
-var pry = require('pryjs');
 
 'use strict';
 module.exports = (sequelize, DataTypes) => {
@@ -20,29 +19,7 @@ module.exports = (sequelize, DataTypes) => {
   };
 
   Recipe.fromRequest = function(request) {
-    return Promise.all(request.map(function(recipe) {
-      return findOrCreateRecipe(recipe, Recipe)
-    }))
-  }
-
-  return Recipe;
-};
-
-function findOrCreateRecipe(request, model) {
-  // Moved function outside as promise.all wasn't resolving correctly.
-  return new Promise((resolve, reject) => {
-    createRecipeIngredients(request, model)
-    .then(function(recipes) {
-      resolve(recipes)
-    })
-    .catch(error => reject(error))
-  })
-}
-
-function createRecipeIngredients(request, Recipe) {
-  var Ingredient = require('../models').Ingredient;
-  return new Promise((resolve, reject) => {
-    Promise.all([
+    return new Promise((resolve, reject) => {
       Recipe.findOrCreate({
         where: {
           name: request.recipe.label,
@@ -50,42 +27,29 @@ function createRecipeIngredients(request, Recipe) {
           recipeUrl: request.recipe.url,
           calories: parseInt(request.recipe.calories)
         }
-      }),
-      Promise.all([
-        request.recipe.ingredients.map(function(ingredient) {
-          return Ingredient.findOrCreate({
-            where: {
-              name: ingredient.text
-            }
-          })
-        })
-      ])
-    ])
-    .then(([recipe, ingredients]) => {
-      Promise.all(ingredients[0])
-      .then((ingredients) => {
-        return createRecipeIngredientAssociations(recipe[0], ingredients[0], request)
       })
-      .then(() => {
-        resolve(recipe[0])
+      .then(function([recipe]) {
+        resolve(recipe)
       })
+      .catch(error => reject(error))
     })
-    .catch(error => {
-    })
-  })
-}
-
-function createRecipeIngredientAssociations(recipe, ingredients, request) {
-  var RecipeIngredient = require('../models').RecipeIngredient;
-  var recipeIngredientArray = [];
-  for(var i = 0; i < ingredients.length; i++) {
-    recipeIngredientArray.push(RecipeIngredient.findOrCreate({
-      where: {
-        RecipeId: recipe.id,
-        IngredientId: ingredients[i].id,
-        quantity: parseInt(request.recipe.ingredients[i].weight)
-      }
-    }))
-  return Promise.all(recipeIngredientArray);
   }
-}
+
+
+  Recipe.forQuery = function(request) {
+    return new Promise((resolve, reject) => {
+      Recipe.findAll({
+        include: [{association: 'queries', where: {term: request}, required: true},
+                   {association: 'ingredients'}]
+      })
+      .then((recipes) => {
+        resolve(recipes)
+      })
+      .catch(error => {
+        reject(error)
+      })
+    })
+  }
+
+  return Recipe;
+};

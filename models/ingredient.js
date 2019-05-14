@@ -9,5 +9,19 @@ module.exports = (sequelize, DataTypes) => {
       as: 'recipes'
     })
   };
+
+  Ingredient.fromRequest = function(request) {
+    return new Promise((resolve, reject) => {
+      Ingredient.findOrCreate({
+        where: {
+          name: request.text
+        }
+      })
+      .then(([ingredient]) => {
+        resolve(ingredient)
+      })
+      .catch(error => reject(error))
+    })
+  }
   return Ingredient;
 };

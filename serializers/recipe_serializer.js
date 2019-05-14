@@ -5,7 +5,8 @@ module.exports = class RecipeSerializer {
       name: recipe.name,
       calories: recipe.calories,
       imageUrl: recipe.imageUrl,
-      recipeUrl: recipe.recipeUrl
+      recipeUrl: recipe.recipeUrl,
+      ingredients: IngredientSerializer.formatAll(recipe)
     }
   }
 
