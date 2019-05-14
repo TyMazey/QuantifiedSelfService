@@ -14,7 +14,7 @@ module.exports = (sequelize, DataTypes) => {
     return new Promise((resolve, reject) => {
       Ingredient.findOrCreate({
         where: {
-          name: request.text
+          name: request.text.slice(0, 70)
         }
       })
       .then(([ingredient]) => {

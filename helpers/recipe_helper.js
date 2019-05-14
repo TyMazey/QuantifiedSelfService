@@ -10,7 +10,7 @@ module.exports = class RecipeHelper {
     return new Promise((resolve, reject) => {
       Recipe.forQuery(food)
       .then(recipes => {
-        if (recipes) {
+        if (recipes.length) {
           return recipes
         } else {
           return requestNewRecipes(food)
