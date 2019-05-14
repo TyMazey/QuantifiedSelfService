@@ -33,4 +33,27 @@ describe('Recipe API', () => {
         })
     })
   })
+  describe('Sort recipes for a food', () => {
+    test('returns a list recipes sorted by the calories from highest to lowest', () => {
+      request(app).get('/api/v1/sort/calories?food=chicken')
+      .then(response => {
+        expect(response.status).toBe(200)
+        expect(response.body[0]).toHaveProperty('calories')
+        expect(response.body[0].calories).toBe(708)
+        expect(response.body[1].calories).toBe(1092)
+        expect(response.body[2].calories).toBe(1651)
+      })
+    })
+    test('returns a list of all recipies in DB sorted by calories', () => {
+      request(app).get('/api/v1/sort/calories')
+      .then(response => {
+        expect(response.status).toBe(200)
+        expect(response.body[0]).toHaveProperty('calories')
+        expect(response.body[0].calories).toBe(322)
+        expect(response.body[0].name).toBe('Skirt Steak and Hanger Steak')
+        expect(response.body[1].calories).toBe(708)
+        expect(response.body[1].name).toBe('Twistin’ Chicken')
+      })
+    })
+  })
 })

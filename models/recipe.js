@@ -51,5 +51,24 @@ module.exports = (sequelize, DataTypes) => {
     })
   }
 
+  Recipe.forQueryAndSort = function(request, sortBy) {
+    return Recipe.findAll({
+      include: [{association: 'queries', where: {term: request}, required: true},
+                 {association: 'ingredients'}],
+      order: [
+        [sortBy, 'ASC']
+      ]
+    })
+  }
+
+  Recipe.noQuerySort = function(sortBy) {
+    return Recipe.findAll({
+      include: [{association: 'ingredients'}],
+      order: [
+        [sortBy, 'ASC']
+      ]
+    })
+  }
+
   return Recipe;
 };
