@@ -2,7 +2,7 @@ var Recipe = require('../models').Recipe;
 var RecipeHelper = require('../helpers/recipe_helper');
 var RecipeSerializer = require('../serializers/recipe_serializer');
 
-module.exports = class SortFacade {
+module.exports = class SortCaloriesFacade {
   static sortRecipes(search, type) {
     return new Promise(function(resolve, reject) {
       checkSearch(search)
