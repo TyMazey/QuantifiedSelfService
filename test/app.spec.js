@@ -49,32 +49,31 @@ describe('Recipe API', () => {
       .then(response => {
         expect(response.status).toBe(200)
         expect(response.body[0]).toHaveProperty('calories')
-        expect(response.body[0].calories).toBe(322)
-        expect(response.body[0].name).toBe('Skirt Steak and Hanger Steak')
-        expect(response.body[1].calories).toBe(708)
-        expect(response.body[1].name).toBe('Twistin’ Chicken')
+        expect(response.body[0].calories).toBe(708)
+        expect(response.body[0].name).toBe('Twistin’ Chicken')
+        expect(response.body[1].calories).toBe(1092)
+        expect(response.body[1].name).toBe('Chicken Gravy')
       })
     })
-  describe('Sort recipes for a food', () => {
-    test('returns a list recipes sorted by the calories from highest to lowest', () => {
-      return request(app).get('/api/v1/sort/calories?food=chicken')
+    test('returns a list recipes sorted by the totalTime from highest to lowest', () => {
+      return request(app).get('/api/v1/sort/totalTime?food=chicken')
       .then(response => {
         expect(response.status).toBe(200)
         expect(response.body[0]).toHaveProperty('totalTime')
-        expect(response.body[0].calories).toBe()
-        expect(response.body[1].calories).toBe()
-        expect(response.body[2].calories).toBe()
+        expect(response.body[0].totalTime).toBe(0)
+        expect(response.body[1].totalTime).toBe(0)
+        expect(response.body[2].totalTime).toBe(0)
       })
     })
-    test('returns a list of all recipies in DB sorted by calories', () => {
-      return request(app).get('/api/v1/sort/calories')
+    test('returns a list of all recipies in DB sorted by totalTime', () => {
+      return request(app).get('/api/v1/sort/totalTime')
       .then(response => {
         expect(response.status).toBe(200)
         expect(response.body[0]).toHaveProperty('totalTime')
-        expect(response.body[0].calories).toBe()
-        expect(response.body[0].name).toBe()
-        expect(response.body[1].calories).toBe()
-        expect(response.body[1].name).toBe()
+        expect(response.body[0].totalTime).toBe(0)
+        expect(response.body[0].name).toBe('Chicken Paprikash')
+        expect(response.body[1].totalTime).toBe(0)
+        expect(response.body[1].name).toBe('Persian Chicken')
       })
     })
   })

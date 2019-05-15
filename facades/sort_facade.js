@@ -1,23 +1,40 @@
 var Recipe = require('../models').Recipe;
 var RecipeHelper = require('../helpers/recipe_helper');
 var RecipeSerializer = require('../serializers/recipe_serializer');
-var pry = require('pryjs')
 
 module.exports = class SortFacade {
-  static sortRecipes(search) {
+  static sortRecipes(search, type) {
     return new Promise(function(resolve, reject) {
       checkSearch(search)
       .then(search => {
-        sortSearchedCalories(search)
+        sortSearched(search, type)
         .then(response => {resolve(response)})
         .catch(error => {reject(error)})
       })
       .catch(noSearch => {
-        sortAllCalories()
+        checkSortAllType(type)
         .then(response => {resolve(response)})
         .catch(error => {reject(error)})
       })
     })
+  }
+}
+
+function checkSortAllType(type) {
+  if (type === 0){
+    return sortAllRecipes('calories');
+  }
+  else if (type === 1){
+    return sortAllRecipes('totalTime');
+  }
+}
+
+function checkSortType(search, type) {
+  if (type === 0){
+    return sortSearchedRecipes(search, 'calories');
+  }
+  else if (type === 1){
+    return sortSearchedRecipes(search, 'totalTime');
   }
 }
 
@@ -31,11 +48,11 @@ function checkSearch(search) {
   })
 };
 
-function sortSearchedCalories(search) {
+function sortSearched(search, type) {
   return new Promise(function(resolve, reject) {
     RecipeHelper.findOrRequestRecipes(search)
     .then(recipes => {
-      sortCalorieRecipes(search)
+      checkSortType(search, type)
       .then(sorted => {
         resolve({status: 200, body: RecipeSerializer.formatAll(sorted)})
       })
@@ -46,17 +63,17 @@ function sortSearchedCalories(search) {
   })
 };
 
-function sortCalorieRecipes(search) {
+function sortSearchedRecipes(search, type) {
   return new Promise(function(resolve, reject) {
-    Recipe.forQueryAndSort(search, 'calories')
+    Recipe.forQueryAndSort(search, type)
     .then(recipes => { resolve(recipes) })
     .catch(error => { reject(error) })
   })
 }
 
-function sortAllCalories() {
+function sortAllRecipes(type) {
   return new Promise(function(resolve, reject) {
-    Recipe.noQuerySort('calories')
+    Recipe.noQuerySort(type)
     .then(sorted => {
       resolve({status: 200, body: RecipeSerializer.formatAll(sorted)})
     })
