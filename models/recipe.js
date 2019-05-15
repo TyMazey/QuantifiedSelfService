@@ -4,7 +4,8 @@ module.exports = (sequelize, DataTypes) => {
     name: DataTypes.STRING,
     imageUrl: DataTypes.STRING,
     recipeUrl: DataTypes.STRING,
-    calories: DataTypes.INTEGER
+    calories: DataTypes.INTEGER,
+    totalTime: DataTypes.INTEGER
   }, {});
   Recipe.associate = function(models) {
     Recipe.belongsToMany(models.Query, {
@@ -24,7 +25,8 @@ module.exports = (sequelize, DataTypes) => {
           name: request.recipe.label,
           imageUrl: request.recipe.image,
           recipeUrl: request.recipe.url,
-          calories: parseInt(request.recipe.calories)
+          calories: parseInt(request.recipe.calories),
+          totalTime: parseInt(request.recipe.totalTime)
         }
       })
       .then(function([recipe]) {
