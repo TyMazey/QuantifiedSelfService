@@ -35,7 +35,7 @@ describe('Recipe API', () => {
   })
   describe('Sort recipes for a food', () => {
     test('returns a list recipes sorted by the calories from highest to lowest', () => {
-      request(app).get('/api/v1/sort/calories?food=chicken')
+      return request(app).get('/api/v1/sort/calories?food=chicken')
       .then(response => {
         expect(response.status).toBe(200)
         expect(response.body[0]).toHaveProperty('calories')
@@ -44,15 +44,35 @@ describe('Recipe API', () => {
         expect(response.body[2].calories).toBe(1651)
       })
     })
+
     test('returns a list of all recipies in DB sorted by calories', () => {
-      request(app).get('/api/v1/sort/calories')
+      return request(app).get('/api/v1/sort/calories')
       .then(response => {
         expect(response.status).toBe(200)
         expect(response.body[0]).toHaveProperty('calories')
-        expect(response.body[0].calories).toBe(322)
-        expect(response.body[0].name).toBe('Skirt Steak and Hanger Steak')
-        expect(response.body[1].calories).toBe(708)
-        expect(response.body[1].name).toBe('Twistin’ Chicken')
+        expect(response.body[0].calories).toBe(708)
+        expect(response.body[1].calories).toBe(1092)
+      })
+    })
+
+    test('returns a list recipes sorted by the ingredients from highest to lowest', () => {
+      return request(app).get('/api/v1/sort/ingredients?food=chicken')
+      .then(response => {
+        expect(response.status).toBe(200)
+        expect(response.body[0]).toHaveProperty('ingredients')
+        expect(response.body[0].ingredients.length).toBe(4)
+        expect(response.body[1].ingredients.length).toBe(4)
+        expect(response.body[2].ingredients.length).toBe(6)
+      })
+    })
+
+    test('returns a list of all recipies in DB sorted by ingredients', () => {
+      return request(app).get('/api/v1/sort/ingredients')
+      .then(response => {
+        expect(response.status).toBe(200)
+        expect(response.body[0]).toHaveProperty('ingredients')
+        expect(response.body[0].ingredients.length).toBe(4)
+        expect(response.body[1].ingredients.length).toBe(4)
       })
     })
   })
